@@ -10,6 +10,11 @@
 		<meta name="robots" content="index,nofollow,noarchive" />
 		<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
 		<link type="text/css" rel="stylesheet" href="style/custom.css" />
+		<style>
+			.error {
+				color: red;
+			}
+		</style>
 	</head>
 	<body>
 		<header>
