@@ -9,11 +9,8 @@
 		<meta name="description" content="Einsendeaufgabe 3" />
 		<meta name="robots" content="index,nofollow,noarchive" />
 		<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
-		<link type="text/css" rel="stylesheet" href="style/custom.css" />
 		<style>
-			.error {
-				color: red;
-			}
+			<?php require_once 'style/custom.css'; ?>
 		</style>
 	</head>
 	<body>
@@ -21,4 +18,8 @@
 			<h1>Xmas Wishlist</h1>	
 		</header>
 		<main>
-			<p>Place your wishes into the form.</p>
+			<p>Ho HO Ho.</p>
+			<div class="row">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-6">
+					

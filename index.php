@@ -1,7 +1,9 @@
 <?php 
-
+// load header needed only once
 require_once 'includes/header.php';
 
+// generate variables for step 1
+// wishes : items, errors, messages, correct
 for ($i=0; $i < 3; $i++) { 
 	$wish[$i] = "";
 	$wish_err[$i] = false;
@@ -9,11 +11,14 @@ for ($i=0; $i < 3; $i++) {
 	$wish_corr[$i] = false;
 }
 
+// variables for step 2 including errors, messages, correct
 $prename = $surname = $street = $city = $zip = $phone = $email = "";
 $prename_err = $surname_err = $street_err = $city_err = $zip_err = $phone_err = $email_err = false;
 $prename_err_msg = $surname_err_msg = $street_err_msg = $city_err_msg = $zip_err_msg = $phone_err_msg = $email_err_msg = false;
 $prename_corr = $surname_corr = $street_corr = $city_corr = $zip_corr = $phone_corr = $email_corr = false;
 
+// variable for status of progress
+// none -> step 1 -> step 2 -> finish
 $step = "";
 
 //Regular Expressions
@@ -24,16 +29,17 @@ $zip_chars = "/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/";
 $phone_chars = "/^((((\+|[0]{2})\d{1,4} )(\(?([1-9]{1})([\d]{1,4}\)?)))|(\([1-9]{1}[\d]{1,4}\))|([0]{1}[\d]{1,5}))( [2-9]{1}[\d-?]{2,10})$/";
 $email_chars = "=^([a-zA-Z0-9][\w.-]*)@((?:[a-zA-ZüöäÜÖÄ0-9][\wüöäÜÖÄ.-]*\.)*[a-zA-ZüöäÜÖÄ0-9][\wüöäÜÖÄ._-]*\.[a-zA-Z]{2,}|((\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d{2}|2[0-4]\d|25[0-5]))$=";
 
-
+// do something if form-button was clicked
+// Request-Method has to be POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	
-	var_dump($_POST);
+	//var_dump($_POST);
+	
+	$wish[0] = $_POST["wish01"];
+	$wish[1] = $_POST["wish02"];
+	$wish[2] = $_POST["wish03"];
 	
 	if (isset($_POST["step01"])) {
-		
-		$wish[0] = $_POST["wish01"];
-		$wish[1] = $_POST["wish02"];
-		$wish[2] = $_POST["wish03"];
 		
 		$step = $_POST["step01"];
 		
@@ -82,15 +88,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		
 				echo "<form method=\"post\" action=\"index.php\">";
 				echo "<div class=\"form-group\">";
-				echo "<label for=\"wish01\">Wish No. 1:</label>";
+				echo "<label for=\"wish01\">Wish #1:</label>";
 				echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" value=\"{$wish[0]}\" class=\"form-control\" readonly />";
-				//echo "<div class=\"error\">{$wish_err_msg[0]}</div>";
-				echo "<label for=\"wish02\">Wish No. 2:</label>";
+				echo "<label for=\"wish02\">Wish #2:</label>";
 				echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" value=\"{$wish[1]}\" class=\"form-control\" readonly />";
-				//echo "<div class=\"error\">{$wish_err_msg[1]}</div>";
-				echo "<label for=\"wish03\">Wish No. 3:</label>";
+				echo "<label for=\"wish03\">Wish #3:</label>";
 				echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" value=\"{$wish[2]}\" class=\"form-control\" readonly />";
-				//echo "<div class=\"error\">{$wish_err_msg[2]}</div>";
 				echo "</div>";
 				echo "<div class=\"form-group\">";
 				echo "<label for=\"prename\">Prename:</label>";
@@ -116,14 +119,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				
 				echo "<form method=\"post\" action=\"index.php\">";
 				echo "<div class=\"form-group\">";
-				echo "<label for=\"wish01\">Wish No. 1:</label>";
-				echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" value=\"{$wish[0]}\" class=\"form-control\" />";
+				echo "<label for=\"wish01\">Wish #1:</label>";
+				echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" value=\"{$wish[0]}\" class=\"form-control\" placeholder=\"Your wish #1\" />";
 				echo "<div class=\"error\">{$wish_err_msg[0]}</div>";
-				echo "<label for=\"wish02\">Wish No. 2:</label>";
-				echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" value=\"{$wish[1]}\" class=\"form-control\" />";
+				echo "<label for=\"wish02\">Wish #2:</label>";
+				echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" value=\"{$wish[1]}\" class=\"form-control\" placeholder=\"Your wish #2\" />";
 				echo "<div class=\"error\">{$wish_err_msg[1]}</div>";
-				echo "<label for=\"wish03\">Wish No. 3:</label>";
-				echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" value=\"{$wish[2]}\" class=\"form-control\" />";
+				echo "<label for=\"wish03\">Wish #3:</label>";
+				echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" value=\"{$wish[2]}\" class=\"form-control\" placeholder=\"Your wish #3\" />";
 				echo "<div class=\"error\">{$wish_err_msg[2]}</div>";
 				echo "<input type=\"hidden\" name=\"step01\" value=\"step01\" />";
 				echo "</div>";
@@ -134,7 +137,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			
 		}
 	}
-
 	
 	if (isset($_POST["step02"])) {
 		
@@ -244,21 +246,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			if ($prename_corr == true && $surname_corr == true && $street_corr == true && $city_corr == true && $zip_corr == true && $phone_corr == true && $email_corr == true) {
 				
 				echo "<p><strong>Hello {$prename} {$surname}, thanks for your request</strong></p>";
+				echo "<p>Your wishes are: {$wish[0]}, {$wish[1]}, {$wish[2]}</p>";				
 				echo "<p>We will contact you soon.</p>";
 					
 			} else {
 				
 				echo "<form method=\"post\" action=\"index.php\">";
 				echo "<div class=\"form-group\">";
-				echo "<label for=\"wish01\">Wish No. 1:</label>";
+				echo "<label for=\"wish01\">Wish #1:</label>";
 				echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" value=\"{$wish[0]}\" class=\"form-control\" readonly />";
-				//echo "<div class=\"error\">{$wish_err_msg[0]}</div>";
-				echo "<label for=\"wish02\">Wish No. 2:</label>";
+				echo "<label for=\"wish02\">Wish #2:</label>";
 				echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" value=\"{$wish[1]}\" class=\"form-control\" readonly />";
-				//echo "<div class=\"error\">{$wish_err_msg[1]}</div>";
-				echo "<label for=\"wish03\">Wish No. 3:</label>";
+				echo "<label for=\"wish03\">Wish #3:</label>";
 				echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" value=\"{$wish[2]}\" class=\"form-control\" readonly />";
-				//echo "<div class=\"error\">{$wish_err_msg[2]}</div>";
 				echo "</div>";
 				echo "<div class=\"form-group\">";
 				echo "<label for=\"prename\">Prename:</label>";
@@ -296,15 +296,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	
 	echo "<form method=\"post\" action=\"index.php\">";
 	echo "<div class=\"form-group\">";
-	echo "<label for=\"wish01\">Wish No. 1:</label>";
-	echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" class=\"form-control\" />";
-	//echo "<div class=\"error\">{$wish_err_msg[0]}</div>";
-	echo "<label for=\"wish02\">Wish No. 2:</label>";
-	echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" class=\"form-control\" />";
-	//echo "<div class=\"error\">{$wish_err_msg[1]}</div>";
-	echo "<label for=\"wish03\">Wish No. 3:</label>";
-	echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" class=\"form-control\" />";
-	//echo "<div class=\"error\">{$wish_err_msg[2]}</div>";
+	echo "<label for=\"wish01\">Wish #1:</label>";
+	echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" class=\"form-control\" placeholder=\"Your wish #1\" />";
+	echo "<label for=\"wish02\">Wish #2:</label>";
+	echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" class=\"form-control\" placeholder=\"Your wish #2\" />";
+	echo "<label for=\"wish03\">Wish #3:</label>";
+	echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" class=\"form-control\" placeholder=\"Your wish #3\" />";
 	echo "<input type=\"hidden\" name=\"step01\" value=\"step01\" />";
 	echo "</div>";
 	echo "<button type=\"submit\" class=\"btn btn-primary\">Submit</button>";
