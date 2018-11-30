@@ -22,11 +22,18 @@ $prename_corr = $surname_corr = $street_corr = $city_corr = $zip_corr = $phone_c
 $step = "";
 
 //Regular Expressions
-$allowed_chars = "/[^a-zA-Z0-9- ]/";
-$prename_chars = $surname_chars = $city_chars = "/[^a-zA-ZäöüÄÖÜ \-]/";
+// only letters, numbers, minus and dot allowed for wishes
+$allowed_chars = "/[^a-zA-ZäöüÄÖÜ0-9 \-\.]/";
+// only letters, minus and dot allowed for prename, surname and city
+$prename_chars = $surname_chars = $city_chars = "/[^a-zA-ZäöüÄÖÜ \-\.]/";
+// street formatted as street and no
 $street_chars = "/[a-zA-ZäöüÄÖÜ \.]+ [0-9]+[a-zA-Z]?/";
+// zip code uses max. 5 numbers and no nonesense codes like 00000 
 $zip_chars = "/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/";
+// phone number uses only numbers, plus, "()" and space to get 6 different formats like
+//  +49 40 80817-9000 and 0049 (40) 80817-9000
 $phone_chars = "/^((((\+|[0]{2})\d{1,4} )(\(?([1-9]{1})([\d]{1,4}\)?)))|(\([1-9]{1}[\d]{1,4}\))|([0]{1}[\d]{1,5}))( [2-9]{1}[\d-?]{2,10})$/";
+// check format of email address
 $email_chars = "=^([a-zA-Z0-9][\w.-]*)@((?:[a-zA-ZüöäÜÖÄ0-9][\wüöäÜÖÄ.-]*\.)*[a-zA-ZüöäÜÖÄ0-9][\wüöäÜÖÄ._-]*\.[a-zA-Z]{2,}|((\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d{2}|2[0-4]\d|25[0-5]))$=";
 
 // do something if form-button was clicked
@@ -35,55 +42,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	
 	//var_dump($_POST);
 	
+	// variables for step 1: the wishes
 	$wish[0] = $_POST["wish01"];
 	$wish[1] = $_POST["wish02"];
 	$wish[2] = $_POST["wish03"];
 	
+	// do if POST variable step01 is set by hidden form field
 	if (isset($_POST["step01"])) {
 		
+		// use variable step for status of progress
 		$step = $_POST["step01"];
 		
+		// do if comparison is true
 		if ($step == "step01") {
 			
-			if (!empty($wish[0])) {
+			// get size of wish-array
+			$wish_len = count($wish);
 			
-				if (preg_match($allowed_chars, $wish[0])) {
-					$wish_err[0] = true;
-					$wish_err_msg[0] = "Special characters used.";
-				} else {
-					$wish_corr[0] = true;
-				}
-			} else {
-				$wish_err[0] = true;
-				$wish_err_msg[0] = "No entry.";
-			}
-			
-			if (!empty($wish[1])) {
+			// use for loop to check wish-items
+			for ($w = 0; $w < $wish_len; $w++) {
 				
-				if (preg_match($allowed_chars, $wish[1])) {
-					$wish_err[1] = true;
-					$wish_err_msg[1] = "Special characters used.";
+				// if wish 1 not empty
+				if (!empty($wish[$w])) {
+					// search for chars which are not allowed
+					if (preg_match($allowed_chars, $wish[$w])) {
+						// do if chars are found
+						$wish_err[$w] = true;
+						$wish_err_msg[$w] = "Special characters used.";
+					} else {
+						// everything is correct
+						$wish_corr[$w] = true;
+					}
 				} else {
-					$wish_corr[1] = true;
+					/// set variables if wish 1 is empty
+					$wish_err[$w] = true;
+					$wish_err_msg[$w] = "No entry.";
 				}
-			} else {
-				$wish_err[1] = true;
-				$wish_err_msg[1] = "No entry.";
 			}
 			
-			if (!empty($wish[2])) {
-				
-				if (preg_match($allowed_chars, $wish[2])) {
-					$wish_err[2] = true;
-					$wish_err_msg[2] = "Special characters used.";
-				} else {
-					$wish_corr[2] = true;
-				}
-			} else {
-				$wish_err[2] = true;
-				$wish_err_msg[2] = "No entry.";
-			}
-			
+			// deliver form of second step if at least one of the variables is true
 			if ($wish_corr[0] == true || $wish_corr[1] == true || $wish_corr[2] == true) {
 		
 				echo "<form method=\"post\" action=\"index.php\">";
@@ -97,19 +94,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				echo "</div>";
 				echo "<div class=\"form-group\">";
 				echo "<label for=\"prename\">Prename:</label>";
-				echo "<input type=\"text\" id=\"prename\" name=\"prename\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"prename\" name=\"prename\" class=\"form-control\" placeholder=\"Your prename\" />";
 				echo "<label for=\"surname\">Surname:</label>";
-				echo "<input type=\"text\" id=\"surname\" name=\"surname\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"surname\" name=\"surname\" class=\"form-control\" placeholder=\"Your surname\" />";
 				echo "<label for=\"street\">Street:</label>";
-				echo "<input type=\"text\" id=\"street\" name=\"street\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"street\" name=\"street\" class=\"form-control\" placeholder=\"Your street and number\" />";
 				echo "<label for=\"city\">City:</label>";
-				echo "<input type=\"text\" id=\"city\" name=\"city\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"city\" name=\"city\" class=\"form-control\" placeholder=\"Your city\" />";
 				echo "<label for=\"zip\">Zip:</label>";
-				echo "<input type=\"text\" id=\"zip\" name=\"zip\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"zip\" name=\"zip\" class=\"form-control\" placeholder=\"Your zip code\" />";
 				echo "<label for=\"phone\">Phone:</label>";
-				echo "<input type=\"text\" id=\"phone\" name=\"phone\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"phone\" name=\"phone\" class=\"form-control\" placeholder=\"Your phone number\" />";
 				echo "<label for=\"email\">Email:</label>";
-				echo "<input type=\"text\" id=\"email\" name=\"email\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"email\" name=\"email\" class=\"form-control\" placeholder=\"Your e-mail address\" />";
 				echo "<input type=\"hidden\" name=\"step02\" value=\"step02\" />";
 				echo "</div>";
 				echo "<button type=\"submit\" class=\"btn btn-primary\">Contact Us</button>";
@@ -117,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				
 			} else {
 				
+				// deliver form if all wish-items are empty or incorrect
 				echo "<form method=\"post\" action=\"index.php\">";
 				echo "<div class=\"form-group\">";
 				echo "<label for=\"wish01\">Wish #1:</label>";
@@ -138,8 +136,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		}
 	}
 	
+	// do if POST variable step02 is set by hidden form field
 	if (isset($_POST["step02"])) {
 		
+		// variables for step 2: the address
 		$prename = $_POST["prename"];
 		$surname = $_POST["surname"];
 		$street = $_POST["street"];
@@ -148,109 +148,142 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$phone = $_POST["phone"];
 		$email = $_POST["email"];
 		
+		// use variable step for status of progress
 		$step = $_POST["step02"];
 		
+		// do if comparison is true
 		if ($step == "step02") {
 			
+			// true because field is not empty
 			if (!empty($prename)) {
-			
+				// search for chars which are not allowed
 				if (preg_match($prename_chars, $prename)) {
+					// chars not allowed
 					$prename_err = true;
 					$prename_err_msg = "Unusual characters used.";
 				} else {
+					// chars and format are correct
 					$prename_corr = true;
 				}
 			} else {
+				// false because field is empty
 				$prename_err = true;
 				$prename_err_msg = "Prename is required.";
 			}
 			
+			// true because field is not empty
 			if (!empty($surname)) {
-			
+				// search for chars which are not allowed
 				if (preg_match($surname_chars, $surname)) {
+					// chars not allowed
 					$surname_err = true;
 					$surname_err_msg = "Unusual characters used.";
 				} else {
+					// chars and format are correct
 					$surname_corr = true;
 				}
 			} else {
+				// false because field is empty
 				$surname_err = true;
 				$surname_err_msg = "Surname is required.";
 			}
 			
+			// true because field is not empty
 			if (!empty($street)) {
-			
+				// check if chars and format are correct
 				if (!preg_match($street_chars, $street)) {
+					// chars and/or format are not correct
 					$street_err = true;
-					$street_err_msg = "Unusual characters used.";
+					$street_err_msg = "Unusual characters or none requested format used.";
 				} else {
+					// chars and format are correct
 					$street_corr = true;
 				}
 			} else {
+				// false because field is empty
 				$street_err = true;
 				$street_err_msg = "Street is required.";
 			}
 			
+			// true because field is not empty
 			if (!empty($city)) {
-			
+				// search for chars which are not allowed
 				if (preg_match($city_chars, $city)) {
+					// chars not allowed
 					$city_err = true;
 					$city_err_msg = "Unusual characters used.";
 				} else {
+					// chars and format are correct
 					$city_corr = true;
 				}
 			} else {
+				// false because field is empty
 				$city_err = true;
 				$city_err_msg = "City is required.";
 			}
 			
+			// true because field is not empty
 			if (!empty($zip)) {
-			
+				// check if chars and format are correct
 				if (!preg_match($zip_chars, $zip)) {
+					// chars and/or format are not correct
 					$zip_err = true;
-					$zip_err_msg = "Unusual characters used.";
+					$zip_err_msg = "Unusual characters or none requested format used.";
 				} else {
+					// chars and format are correct
 					$zip_corr = true;
 				}
 			} else {
+				// false because field is empty
 				$zip_err = true;
 				$zip_err_msg = "Zip is required.";
 			}
 			
+			// true because field is not empty
 			if (!empty($phone)) {
-			
+				// check if chars and format are correct
 				if (!preg_match($phone_chars, $phone)) {
+					// chars and/or format are not correct
 					$phone_err = true;
-					$phone_err_msg = "Unusual or to much characters used.";
+					$phone_err_msg = "Unusual characters or none requested format used.";
 				} else {
+					// chars and format are correct
 					$phone_corr = true;
 				}
 			} else {
+				// false because field is empty
 				$phone_err = true;
 				$phone_err_msg = "Phonenumber is required.";
 			}
 			
+			// true because field is not empty
 			if (!empty($email)) {
-			
+				// check if chars and format are correct
 				if (!preg_match($email_chars, $email)) {
+					// chars and/or format are not correct
 					$email_err = true;
-					$email_err_msg = "Unusual characters or wrong format used.";
+					$email_err_msg = "Unusual characters or none requested format used.";
 				} else {
+					// chars and format are correct
 					$email_corr = true;
 				}
 			} else {
+				// false because field is empty
 				$email_err = true;
 				$email_err_msg = "Email-address is required.";
 			}
 			
+			// deliver answer (step 3) if all variables are true
 			if ($prename_corr == true && $surname_corr == true && $street_corr == true && $city_corr == true && $zip_corr == true && $phone_corr == true && $email_corr == true) {
 				
+				// show pre- and surname and all wish-items
 				echo "<p><strong>Hello {$prename} {$surname}, thanks for your request</strong></p>";
 				echo "<p>Your wishes are: {$wish[0]}, {$wish[1]}, {$wish[2]}</p>";				
 				echo "<p>We will contact you soon.</p>";
 					
 			} else {
-				
+					
+				// deliver form of step 2 again if all address-items are empty or incorrect
 				echo "<form method=\"post\" action=\"index.php\">";
 				echo "<div class=\"form-group\">";
 				echo "<label for=\"wish01\">Wish #1:</label>";
@@ -262,25 +295,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				echo "</div>";
 				echo "<div class=\"form-group\">";
 				echo "<label for=\"prename\">Prename:</label>";
-				echo "<input type=\"text\" id=\"prename\" name=\"prename\" value=\"{$prename}\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"prename\" name=\"prename\" value=\"{$prename}\" class=\"form-control\" placeholder=\"Your prename\" />";
 				echo "<div class=\"error\">{$prename_err_msg}</div>";
 				echo "<label for=\"surname\">Surame:</label>";
-				echo "<input type=\"text\" id=\"surname\" name=\"surname\" value=\"{$surname}\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"surname\" name=\"surname\" value=\"{$surname}\" class=\"form-control\" placeholder=\"Your surname\" />";
 				echo "<div class=\"error\">{$surname_err_msg}</div>";
 				echo "<label for=\"street\">Street:</label>";
-				echo "<input type=\"text\" id=\"street\" name=\"street\" value=\"{$street}\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"street\" name=\"street\" value=\"{$street}\" class=\"form-control\" placeholder=\"Your street and number\" />";
 				echo "<div class=\"error\">{$street_err_msg}</div>";
 				echo "<label for=\"city\">City:</label>";
-				echo "<input type=\"text\" id=\"city\" name=\"city\" value=\"{$city}\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"city\" name=\"city\" value=\"{$city}\" class=\"form-control\" placeholder=\"Your city\" />";
 				echo "<div class=\"error\">{$city_err_msg}</div>";
 				echo "<label for=\"zip\">Zip:</label>";
-				echo "<input type=\"text\" id=\"zip\" name=\"zip\" value=\"{$zip}\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"zip\" name=\"zip\" value=\"{$zip}\" class=\"form-control\" placeholder=\"Your zip code\" />";
 				echo "<div class=\"error\">{$zip_err_msg}</div>";
 				echo "<label for=\"phone\">Phone:</label>";
-				echo "<input type=\"text\" id=\"phone\" name=\"phone\" value=\"{$phone}\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"phone\" name=\"phone\" value=\"{$phone}\" class=\"form-control\" placeholder=\"Your phone number\" />";
 				echo "<div class=\"error\">{$phone_err_msg}</div>";
 				echo "<label for=\"email\">Email:</label>";
-				echo "<input type=\"text\" id=\"email\" name=\"email\" value=\"{$email}\" class=\"form-control\" />";
+				echo "<input type=\"text\" id=\"email\" name=\"email\" value=\"{$email}\" class=\"form-control\" placeholder=\"Your e-mail address\" />";
 				echo "<div class=\"error\">{$email_err_msg}</div>";
 				echo "<input type=\"hidden\" name=\"step02\" value=\"step02\" />";
 				echo "</div>";
@@ -294,6 +327,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	
 } else {
 	
+	// load starting formular, if form-button wasn't pressed
 	echo "<form method=\"post\" action=\"index.php\">";
 	echo "<div class=\"form-group\">";
 	echo "<label for=\"wish01\">Wish #1:</label>";
@@ -309,5 +343,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	
 }
 
+// load footer needed only once
 require_once 'includes/footer.php';
 ?>
