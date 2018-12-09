@@ -1,4 +1,9 @@
-<?php 
+<?php
+
+require_once 'view/Templates.php';
+require_once 'model/Wish.php';
+require_once 'model/Customer.php';
+
 // load header needed only once
 require_once 'includes/header.php';
 
@@ -35,6 +40,10 @@ $zip_chars = "/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/";
 $phone_chars = "/^((((\+|[0]{2})\d{1,4} )(\(?([1-9]{1})([\d]{1,4}\)?)))|(\([1-9]{1}[\d]{1,4}\))|([0]{1}[\d]{1,5}))( [2-9]{1}[\d-?]{2,10})$/";
 // check format of email address
 $email_chars = "=^([a-zA-Z0-9][\w.-]*)@((?:[a-zA-ZüöäÜÖÄ0-9][\wüöäÜÖÄ.-]*\.)*[a-zA-ZüöäÜÖÄ0-9][\wüöäÜÖÄ._-]*\.[a-zA-Z]{2,}|((\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d{2}|2[0-4]\d|25[0-5]))$=";
+
+
+$form = new view\Templates();
+
 
 // do something if form-button was clicked
 // Request-Method has to be POST
@@ -82,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			
 			// deliver form of second step if at least one of the variables is true
 			if ($wish_corr[0] == true || $wish_corr[1] == true || $wish_corr[2] == true) {
-		
+				
 				echo "<form method=\"post\" action=\"index.php\">";
 				echo "<div class=\"form-group\">";
 				echo "<label for=\"wish01\">Wish #1:</label>";
@@ -115,22 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			} else {
 				
 				// deliver form if all wish-items are empty or incorrect
-				echo "<form method=\"post\" action=\"index.php\">";
-				echo "<div class=\"form-group\">";
-				echo "<label for=\"wish01\">Wish #1:</label>";
-				echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" value=\"{$wish[0]}\" class=\"form-control\" placeholder=\"Your wish #1\" />";
-				echo "<div class=\"error\">{$wish_err_msg[0]}</div>";
-				echo "<label for=\"wish02\">Wish #2:</label>";
-				echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" value=\"{$wish[1]}\" class=\"form-control\" placeholder=\"Your wish #2\" />";
-				echo "<div class=\"error\">{$wish_err_msg[1]}</div>";
-				echo "<label for=\"wish03\">Wish #3:</label>";
-				echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" value=\"{$wish[2]}\" class=\"form-control\" placeholder=\"Your wish #3\" />";
-				echo "<div class=\"error\">{$wish_err_msg[2]}</div>";
-				echo "<input type=\"hidden\" name=\"step01\" value=\"step01\" />";
-				echo "</div>";
-				echo "<button type=\"submit\" class=\"btn btn-primary\">Submit</button>";
-				echo "</form>";
-				
+				$form->wishesView($wish, $wish_err_msg);
 			}
 			
 		}
@@ -328,19 +322,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 } else {
 	
 	// load starting formular, if form-button wasn't pressed
-	echo "<form method=\"post\" action=\"index.php\">";
-	echo "<div class=\"form-group\">";
-	echo "<label for=\"wish01\">Wish #1:</label>";
-	echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" class=\"form-control\" placeholder=\"Your wish #1\" />";
-	echo "<label for=\"wish02\">Wish #2:</label>";
-	echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" class=\"form-control\" placeholder=\"Your wish #2\" />";
-	echo "<label for=\"wish03\">Wish #3:</label>";
-	echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" class=\"form-control\" placeholder=\"Your wish #3\" />";
-	echo "<input type=\"hidden\" name=\"step01\" value=\"step01\" />";
-	echo "</div>";
-	echo "<button type=\"submit\" class=\"btn btn-primary\">Submit</button>";
-	echo "</form>";
-	
+	$form->defaultView();
 }
 
 // load footer needed only once
