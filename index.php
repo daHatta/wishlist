@@ -92,35 +92,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			// deliver form of second step if at least one of the variables is true
 			if ($wish_corr[0] == true || $wish_corr[1] == true || $wish_corr[2] == true) {
 				
-				echo "<form method=\"post\" action=\"index.php\">";
-				echo "<div class=\"form-group\">";
-				echo "<label for=\"wish01\">Wish #1:</label>";
-				echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" value=\"{$wish[0]}\" class=\"form-control\" readonly />";
-				echo "<label for=\"wish02\">Wish #2:</label>";
-				echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" value=\"{$wish[1]}\" class=\"form-control\" readonly />";
-				echo "<label for=\"wish03\">Wish #3:</label>";
-				echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" value=\"{$wish[2]}\" class=\"form-control\" readonly />";
-				echo "</div>";
-				echo "<div class=\"form-group\">";
-				echo "<label for=\"prename\">Prename:</label>";
-				echo "<input type=\"text\" id=\"prename\" name=\"prename\" class=\"form-control\" placeholder=\"Your prename\" />";
-				echo "<label for=\"surname\">Surname:</label>";
-				echo "<input type=\"text\" id=\"surname\" name=\"surname\" class=\"form-control\" placeholder=\"Your surname\" />";
-				echo "<label for=\"street\">Street:</label>";
-				echo "<input type=\"text\" id=\"street\" name=\"street\" class=\"form-control\" placeholder=\"Your street and number\" />";
-				echo "<label for=\"city\">City:</label>";
-				echo "<input type=\"text\" id=\"city\" name=\"city\" class=\"form-control\" placeholder=\"Your city\" />";
-				echo "<label for=\"zip\">Zip:</label>";
-				echo "<input type=\"text\" id=\"zip\" name=\"zip\" class=\"form-control\" placeholder=\"Your zip code\" />";
-				echo "<label for=\"phone\">Phone:</label>";
-				echo "<input type=\"text\" id=\"phone\" name=\"phone\" class=\"form-control\" placeholder=\"Your phone number\" />";
-				echo "<label for=\"email\">Email:</label>";
-				echo "<input type=\"text\" id=\"email\" name=\"email\" class=\"form-control\" placeholder=\"Your e-mail address\" />";
-				echo "<input type=\"hidden\" name=\"step02\" value=\"step02\" />";
-				echo "</div>";
-				echo "<button type=\"submit\" class=\"btn btn-primary\">Contact Us</button>";
-				echo "</form>";
-				
+				// form of second step
+				$form->customerView($wish);
+								
 			} else {
 				
 				// deliver form if all wish-items are empty or incorrect
@@ -276,43 +250,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				echo "<p>We will contact you soon.</p>";
 					
 			} else {
-					
-				// deliver form of step 2 again if all address-items are empty or incorrect
-				echo "<form method=\"post\" action=\"index.php\">";
-				echo "<div class=\"form-group\">";
-				echo "<label for=\"wish01\">Wish #1:</label>";
-				echo "<input type=\"text\" id=\"wish01\" name=\"wish01\" value=\"{$wish[0]}\" class=\"form-control\" readonly />";
-				echo "<label for=\"wish02\">Wish #2:</label>";
-				echo "<input type=\"text\" id=\"wish01\" name=\"wish02\" value=\"{$wish[1]}\" class=\"form-control\" readonly />";
-				echo "<label for=\"wish03\">Wish #3:</label>";
-				echo "<input type=\"text\" id=\"wish03\" name=\"wish03\" value=\"{$wish[2]}\" class=\"form-control\" readonly />";
-				echo "</div>";
-				echo "<div class=\"form-group\">";
-				echo "<label for=\"prename\">Prename:</label>";
-				echo "<input type=\"text\" id=\"prename\" name=\"prename\" value=\"{$prename}\" class=\"form-control\" placeholder=\"Your prename\" />";
-				echo "<div class=\"error\">{$prename_err_msg}</div>";
-				echo "<label for=\"surname\">Surame:</label>";
-				echo "<input type=\"text\" id=\"surname\" name=\"surname\" value=\"{$surname}\" class=\"form-control\" placeholder=\"Your surname\" />";
-				echo "<div class=\"error\">{$surname_err_msg}</div>";
-				echo "<label for=\"street\">Street:</label>";
-				echo "<input type=\"text\" id=\"street\" name=\"street\" value=\"{$street}\" class=\"form-control\" placeholder=\"Your street and number\" />";
-				echo "<div class=\"error\">{$street_err_msg}</div>";
-				echo "<label for=\"city\">City:</label>";
-				echo "<input type=\"text\" id=\"city\" name=\"city\" value=\"{$city}\" class=\"form-control\" placeholder=\"Your city\" />";
-				echo "<div class=\"error\">{$city_err_msg}</div>";
-				echo "<label for=\"zip\">Zip:</label>";
-				echo "<input type=\"text\" id=\"zip\" name=\"zip\" value=\"{$zip}\" class=\"form-control\" placeholder=\"Your zip code\" />";
-				echo "<div class=\"error\">{$zip_err_msg}</div>";
-				echo "<label for=\"phone\">Phone:</label>";
-				echo "<input type=\"text\" id=\"phone\" name=\"phone\" value=\"{$phone}\" class=\"form-control\" placeholder=\"Your phone number\" />";
-				echo "<div class=\"error\">{$phone_err_msg}</div>";
-				echo "<label for=\"email\">Email:</label>";
-				echo "<input type=\"text\" id=\"email\" name=\"email\" value=\"{$email}\" class=\"form-control\" placeholder=\"Your e-mail address\" />";
-				echo "<div class=\"error\">{$email_err_msg}</div>";
-				echo "<input type=\"hidden\" name=\"step02\" value=\"step02\" />";
-				echo "</div>";
-				echo "<button type=\"submit\" class=\"btn btn-primary\">Contact Us</button>";
-				echo "</form>";
+				
+				$customer = array($prename, $surname, $street, $city, $zip, $phone, $email);
+				$error = array($prename_err_msg, $surname_err_msg, $street_err_msg, $city_err_msg, $zip_err_msg, $phone_err_msg, $email_err_msg);
+				
+				// deliver form of step 2 again if address-items are empty or incorrect
+				$form->customerView($wish, $customer, $error);
 				
 			}
 			

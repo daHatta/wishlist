@@ -8,22 +8,22 @@ namespace model;
 class Customer 
 {
 	
-	protected $prename = "";
-	protected $surname = "";
-	protected $street = "";
-	protected $city = "";
-	protected $zip = "";
-	protected $phone = "";
-	protected $email = "";
+	public $prename = "";
+	public $surname = "";
+	public $street = "";
+	public $city = "";
+	public $zip = "";
+	public $phone = "";
+	public $email = "";
 	
-	public function __construct($prename, $surname, $street, $city, $zip, $phone, $email) {
-		$this->prename = $prename;
-		$this->surname = $surname;
-		$this->street = $street;
-		$this->city = $city;
-		$this->zip = $zip;
-		$this->phone = $phone;
-		$this->email = $email;
+	public function __construct($data) {
+		$this->prename = $data[0];
+		$this->surname = $data[1];
+		$this->street = $data[2];
+		$this->city = $data[3];
+		$this->zip = $data[4];
+		$this->phone = $data[5];
+		$this->email = $data[6];
 	}
 	
 	
