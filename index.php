@@ -241,18 +241,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$email_err_msg = "Email-address is required.";
 			}
 			
+			
+			$customer = array($prename, $surname, $street, $city, $zip, $phone, $email);
+			$error = array($prename_err_msg, $surname_err_msg, $street_err_msg, $city_err_msg, $zip_err_msg, $phone_err_msg, $email_err_msg);
+			
+			
 			// deliver answer (step 3) if all variables are true
 			if ($prename_corr == true && $surname_corr == true && $street_corr == true && $city_corr == true && $zip_corr == true && $phone_corr == true && $email_corr == true) {
 				
 				// show pre- and surname and all wish-items
-				echo "<p><strong>Hello {$prename} {$surname}, thanks for your request</strong></p>";
-				echo "<p>Your wishes are: {$wish[0]}, {$wish[1]}, {$wish[2]}</p>";				
-				echo "<p>We will contact you soon.</p>";
-					
-			} else {
+				$form->finalView($wish, $customer);
 				
-				$customer = array($prename, $surname, $street, $city, $zip, $phone, $email);
-				$error = array($prename_err_msg, $surname_err_msg, $street_err_msg, $city_err_msg, $zip_err_msg, $phone_err_msg, $email_err_msg);
+			} else {
 				
 				// deliver form of step 2 again if address-items are empty or incorrect
 				$form->customerView($wish, $customer, $error);

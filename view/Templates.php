@@ -11,7 +11,7 @@ use model\Customer;
 class Templates
 {
 	
-	private $label, $type, $class, $wish, $placeholder;	
+	private $label, $type, $class, $wish, $placeholder;
 	
 	public function __construct()
 	{
@@ -157,32 +157,48 @@ class Templates
 		echo "</form>";
 		
 	}
+
+	public function finalView($wishes, $customer) {
+				
+		$c_final = new Customer($customer);
+		
+		for ($i=0; $i < count($wishes); $i++) {
+			
+			$wishItem[$i] = new Wish();
+			$wishItem[$i]->setWish($wishes[$i]);
+			$w[$i] = $wishItem[$i]->getWish();
+		
+		}
+		
+		echo "<p><strong>Hello {$c_final->prename} {$c_final->surname}, thanks for your request.</strong></p>";
+		echo "<p>Your wishes are: <strong>";
+		
+		if (!empty($w[0])) {
+			if (empty($w[1])) {
+				if (empty($w[2])) {
+					echo "{$w[0]}.";
+				}	
+			} else {
+				echo "{$w[0]}, ";	
+			}
+		}
+		
+		if (!empty($w[1])) {
+			if (empty($w[2])) {
+				echo "{$w[1]}.";
+			} else {
+				echo "{$w[1]}, ";	
+			}
+		}
+		
+		if (!empty($w[2])) {
+			echo "{$w[2]}.";
+		}
+		
+		echo "<strong></p>";
+		echo "<p>We will contact you soon.</p>";
+		
+	}
+
 }
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
