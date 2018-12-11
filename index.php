@@ -1,5 +1,5 @@
 <?php
-
+// load views and classes
 require_once 'view/Templates.php';
 require_once 'model/Wish.php';
 require_once 'model/Customer.php';
@@ -41,15 +41,13 @@ $phone_chars = "/^((((\+|[0]{2})\d{1,4} )(\(?([1-9]{1})([\d]{1,4}\)?)))|(\([1-9]
 // check format of email address
 $email_chars = "=^([a-zA-Z0-9][\w.-]*)@((?:[a-zA-ZüöäÜÖÄ0-9][\wüöäÜÖÄ.-]*\.)*[a-zA-ZüöäÜÖÄ0-9][\wüöäÜÖÄ._-]*\.[a-zA-Z]{2,}|((\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d{2}|2[0-4]\d|25[0-5]))$=";
 
-
+// instance of class Templates for views 
 $form = new view\Templates();
 
 
 // do something if form-button was clicked
 // Request-Method has to be POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-	
-	//var_dump($_POST);
 	
 	// variables for step 1: the wishes
 	$wish[0] = $_POST["wish01"];
@@ -241,10 +239,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$email_err_msg = "Email-address is required.";
 			}
 			
-			
+			// array with variables needed for customers
 			$customer = array($prename, $surname, $street, $city, $zip, $phone, $email);
+			// array with error messages needed for feedback
 			$error = array($prename_err_msg, $surname_err_msg, $street_err_msg, $city_err_msg, $zip_err_msg, $phone_err_msg, $email_err_msg);
-			
 			
 			// deliver answer (step 3) if all variables are true
 			if ($prename_corr == true && $surname_corr == true && $street_corr == true && $city_corr == true && $zip_corr == true && $phone_corr == true && $email_corr == true) {
@@ -258,7 +256,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$form->customerView($wish, $customer, $error);
 				
 			}
-			
 		}
 	}
 	
